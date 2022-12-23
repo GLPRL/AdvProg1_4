@@ -159,7 +159,7 @@ vector <TypeVector> readData(string alg, int &vsize, string filename) {
  * Third: Our method of calculation. AUC, MAN, CHB, CAN, MIN for each of the algorithms.
  * @return code 0 if works as expected.
 **/
-int main(int argc, char *argv[]) {
+int runMain(int argc, char *argv[]) {
     if (argc != 4) {                                                //If we don't have enough cmd line args
         perror("Not enough command line arguments.");
         return -1;

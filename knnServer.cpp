@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
         } else if (read_bytes < 0) {
             perror("Error reading from client");
         } else {
-            cout << buffer;
+            cout << buffer << endl;
         }
         vector<vector<char>> vector = getVector(buffer);              //Process the data from buffer
                                                                       //build the ALG

@@ -169,11 +169,11 @@ string runMain(string alg, vector<double> v, int k, string filename) {
     while (true) {                                                //Loop allows user to do multiple tries
         if(v.size()!=fileVectorSize){
             cout<<"Your vector size does not match the excel file, try another vector"<<endl;
-            return null;
+            return "";
         } else
         if(v.size() == 0) {
             cout << "Too many whitespaces, try another vector" << endl;
-            return null;
+            return "";
         }
         for(int i=0;i<tv.size();i++){
             tv[i].calculateDistance(v,alg);      //calculate distance for each vector in the file

@@ -1,13 +1,5 @@
-#include <iostream>
-#include <sys/socket.h>
-#include <stdio.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <string.h>
-#include <vector>
-#include "MainDistance.cpp"
-using namespace std;
+#include "knnServer.h"
+
 /**
  * Function receives the in-buffer, returns vector of the data in buffer in orderly manner
  * @param buffer in-buffer
@@ -42,7 +34,7 @@ vector<double> getNumberVector(int size, vector<vector<char>> vector) {
     for (int i = 0; i < size; i++) {
         try {
             string s(vector[i].begin(), vector[i].end());
-            double num = stof(s);
+            double num = stod(s);
             v.push_back(num);
         } catch (...) {
             cout << "Vector is of incorrect parameters, please enter a new one" << endl;
@@ -84,7 +76,7 @@ int getPort(string port) {
  * @return nothing
  */
 int main(int argc, char *argv[]) {
-    if (argc < 3) {
+    if (argc < 4) {
         cout << "Not enough arguments" << endl;
         return 1;
     }
@@ -144,7 +136,10 @@ int main(int argc, char *argv[]) {
         vector.pop_back();
         vector.pop_back();
         string fileName = argv[1];                                    //Get filename
-        string result = runMain(alg, numVector, k, argv[1]);                                    //Run KNN algorithm
+        string result = runMain(alg, numVector, k, argv[1]);                             //Run KNN algorithm
+        if (result.empty()) {
+            continue;
+        }
         int resSize = result.length();
         char outBuffer[4096];
         for (int i = 0; i < resSize; i++)

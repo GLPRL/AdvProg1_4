@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <vector>
 using namespace std;
 /**
  * Function receives the in-buffer, returns vector of the data in buffer in orderly manner
@@ -13,21 +14,33 @@ using namespace std;
  */
 vector<vector<char>> getVector(char buffer[]) {
     int size = 0;
-    while (buffer[i] != '\n') {                             //get the actual size of buffer
+    while (buffer[size] != '\n') {                             //get the actual size of buffer
         size++;
     }
     vector<vector<char>> stringVector;
     vector<char> tempv;
     for (int i = 0; i < size; i++) {                        //Create a vector of strings from buffer
         if (buffer[i] != ' ') {
-            tempv.pushback(buffer[i]);
+            tempv.push_back(buffer[i]);
         } else {
-            stringVector.pushback(tempv);                   //If whitespace, then ended a string & begin new one
-            cout << tempv << endl;
+            stringVector.push_back(tempv);                   //If whitespace, then ended a string & begin new one
             tempv.clear();                                  //purge old string
         }
     }
     return stringVector;
+}
+vector<double> getNumberVector(int size, vector<vector<char>> vector) {
+    vector<double> v;
+    for (int i = 0; i < size; i++) {
+        try {
+            double num = atof(vector[i])
+            v.pushback();
+        } catch (...) {
+            cout << "Vector is of incorrect parameters, please enter a new one" << endl;
+            return NULL;
+        }
+    }
+    return v;
 }
 /**
  * Check if port is valid: If can be converted to int, and is in range 0-65535
@@ -58,7 +71,6 @@ int getPort(string port) {
  * ARG[0] = server.out
  * ARG[1] = file to classify with
  * ARG[2] = port
- * TODO: All of them MUST be checked!
  * Server receives data from client as STRING, and then divides according to whitespace the items
  * @return nothing
  */
@@ -94,7 +106,7 @@ int main(int argc, char *argv[]) {
         if (client_sock < 0) {
             perror("Error accepting client");
         }
-        char buffer[4096];                              //TODO: receives TypeVector, ALG, K as STRING
+        char buffer[4096];
         int expected_data_len = sizeof(buffer);
         int read_bytes = recv(client_sock, buffer, expected_data_len, 0);                                 //Receive data
         if (buffer[0] == '-' && buffer[1] == '1') {                                      //Is "-1" then close connection
@@ -109,11 +121,20 @@ int main(int argc, char *argv[]) {
         } else {
             cout << buffer;
         }
-        vector<vector<char>> vector = getVector(buffer);              //Process the data from buffer
-                                                                      //build the ALG
-                                                                      //Build number K
+        vector<vector<char>> vector = getVector(buffer);                                  //Process the data from buffer
+        string alg((vector.end() - 1).begin(), (vector.end() - 1).end());                             //Build string ALG
+        int k = stod(vector.end().begin(), vector.end().end());                                         //Build number K
+        vector.pop_back();                                           //Remove data which won't be processed into numbers
+        vector.pop_back();
+        int s = vector.size();
+        vector<double> numVector = getNumberVector(s, vector);
+        if (numVector == NULL) {
+            char outBufferErr[] = "invalid input";
+            int sent_bytes = send(client_sock, outBufferErr, read_bytes, 0);
+            continue;
+        }
         string fileName = argv[1];                                    //Get filename
-        string result = runMain();                                    //Run KNN algoritm
+        string result = runMain(alg, numVector, k, argv[1]);                                    //Run KNN algorithm
         int resSize = result.length();
         char outBuffer[4096];
         for (int i = 0; i < resSize; i++)

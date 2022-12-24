@@ -163,18 +163,8 @@ vector <TypeVector> readData(string alg, int &vsize, string filename) {
  * @return code 0 if works as expected.
 **/
 string runMain(string alg, vector<double> v, int k, string filename) {
-    if (validateAlg(argv[3]) != 1) {                            //Validation of correct user input for algorithm
-        perror("Invalid algorithm name input.");
-        return -1;
-    }
-    for (int i = 0; i < strlen(argv[1]); i++) {                     //Validation that K is an int
-        if (isdigit(argv[1][i]) == false) {
-            perror("Second parameter must be an integer.");
-            return -1;
-        }
-    }
     int fileVectorSize = -1;
-    vector <TypeVector> tv = readData(argv[3], fileVectorSize, argv[2]);
+    vector <TypeVector> tv = readData(alg, fileVectorSize, filename);
     map<string, int> names = getAllNames(tv);
     while (true) {                                                //Loop allows user to do multiple tries
         if(v.size()!=fileVectorSize){
@@ -186,7 +176,7 @@ string runMain(string alg, vector<double> v, int k, string filename) {
             return null;
         }
         for(int i=0;i<tv.size();i++){
-            tv[i].calculateDistance(v,argv[3]);      //calculate distance for each vector in the file
+            tv[i].calculateDistance(v,alg);      //calculate distance for each vector in the file
         }
         break;                                       //If calculations were made, leave loop
     }

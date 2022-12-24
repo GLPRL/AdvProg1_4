@@ -29,15 +29,23 @@ vector<vector<char>> getVector(char buffer[]) {
     }
     return stringVector;
 }
+/**
+ * Translates each string into double
+ * @param size size of vector
+ * @param vector string vector
+ * @return double-precision vector
+ */
 vector<double> getNumberVector(int size, vector<vector<char>> vector) {
     vector<double> v;
+    vector<double> vErr;
     for (int i = 0; i < size; i++) {
         try {
-            double num = atof(vector[i])
-            v.pushback();
+            string s(vector[i].begin(), vector[i].end());
+            double num = atof(s);
+            v.push_back(num);
         } catch (...) {
             cout << "Vector is of incorrect parameters, please enter a new one" << endl;
-            return NULL;
+            return vErr;
         }
     }
     return v;
@@ -128,7 +136,7 @@ int main(int argc, char *argv[]) {
         vector.pop_back();
         int s = vector.size();
         vector<double> numVector = getNumberVector(s, vector);
-        if (numVector == NULL) {
+        if (numVector.begin() == numVector.end()) {
             char outBufferErr[] = "invalid input";
             int sent_bytes = send(client_sock, outBufferErr, read_bytes, 0);
             continue;

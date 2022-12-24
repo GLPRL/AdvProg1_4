@@ -8,4 +8,4 @@ add_executable(AdvProg1_4 MainDistance.cpp
         Algorithms.cpp
         TypeVector.h
         TypeVector.cpp
-        knnServer.cpp knnServer.h MainDistance.h)
+        knnServer.cpp knnServer.h MainDistance.h fileData.cpp fileData.h fileData.h fileData.cpp)

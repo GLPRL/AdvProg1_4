@@ -162,13 +162,13 @@ vector <TypeVector> readData(string alg, int &vsize, string filename) {
  * @param filename filename to use for algorithm
  * @return code 0 if works as expected.
 **/
-string runMain(string alg, vector<double> v, int k, string filename) {
+string runMain(string alg, vector<double> v, int k, string filename) { //TODO: modify runMan: read the file before while(true) in knnServer
     int fileVectorSize = -1;
     vector <TypeVector> tv = readData(alg, fileVectorSize, filename);
     map<string, int> names = getAllNames(tv);
     while (true) {                                                //Loop allows user to do multiple tries
         if(v.size()!=fileVectorSize){
-            cout<<"Your vector size does not match the excel file, try another vector"<<endl;
+            cout << "Your vector size does not match the excel file, try another vector"<<endl;
             return "";
         } else
         if(v.size() == 0) {

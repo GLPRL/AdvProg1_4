@@ -13,5 +13,8 @@ MainDistance.o: MainDistance.cpp
 TypeVector.o: TypeVector.cpp TypeVector.h
 	g++ -c TypeVector.cpp
 
+fileData.o: fileData.cpp fileData.h
+	g++ -c fileData.cpp
+
 clean:
 	rm *.o server.out

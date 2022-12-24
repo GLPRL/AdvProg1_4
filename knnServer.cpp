@@ -7,6 +7,29 @@
 #include <string.h>
 using namespace std;
 /**
+ * Function receives the in-buffer, returns vector of the data in buffer in orderly manner
+ * @param buffer in-buffer
+ * @return data of buffer in order
+ */
+vector<vector<char>> getVector(char buffer[]) {
+    int size = 0;
+    while (buffer[i] != '\n') {                             //get the actual size of buffer
+        size++;
+    }
+    vector<vector<char>> stringVector;
+    vector<char> tempv;
+    for (int i = 0; i < size; i++) {                        //Create a vector of strings from buffer
+        if (buffer[i] != ' ') {
+            tempv.pushback(buffer[i]);
+        } else {
+            stringVector.pushback(tempv);                   //If whitespace, then ended a string & begin new one
+            cout << tempv << endl;
+            tempv.clear();                                  //purge old string
+        }
+    }
+    return stringVector;
+}
+/**
  * Check if port is valid: If can be converted to int, and is in range 0-65535
  * @param port port to listen on
  * @return port number if exists, -1 otherwise.
@@ -19,7 +42,7 @@ int getPort(string port) {
             return -1;
         }
     }
-    int serverPort = stod(port);
+    int serverPort = stoi(port);
     if (serverPort > 65535) {
         return -1;
     }
@@ -40,10 +63,14 @@ int getPort(string port) {
  * @return nothing
  */
 int main(int argc, char *argv[]) {
+    if (argc < 3) {
+        cout << "Not enough arguments" << endl;
+        return 1;
+    }
     const int server_port = getPort(argv[2]);                                                          //Port validation
     if (server_port == -1) {
-        cout << "Please enter a valid port" << endl;
-        server_port = getPort(argv[2]);
+        cout << "No valid port entered. Exiting..." << endl;
+        return 1;
     }
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
@@ -82,8 +109,15 @@ int main(int argc, char *argv[]) {
         } else {
             cout << buffer;
         }
+        vector<vector<char>> vector = getVector(buffer);              //Process the data from buffer
+                                                                      //build the ALG
+                                                                      //Build number K
+        string fileName = argv[1];                                    //Get filename
+        string result = runMain();                                    //Run KNN algoritm
+        int resSize = result.length();
         char outBuffer[4096];
-        // outBuffer = the result of knn
+        for (int i = 0; i < resSize; i++)
+            outBuffer[i] = result[i];                           //Copy data into outBuffer
         int sent_bytes = send(client_sock, outBuffer, read_bytes, 0);
         if (sent_bytes < 0) {
             perror("error sending to client");

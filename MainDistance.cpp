@@ -69,8 +69,7 @@ vector<double> readVector() {
     int pos = 0;
     double x;
     char *e;
-                                                    // Loop until the end of the string each time separating the spaces.
-    while ((pos = lin.find(" ")) != string::npos) {
+    while ((pos = lin.find(" ")) != string::npos) { // Loop until the end of the string each time separating the spaces.
         string sub = lin.substr(0, pos);
         x = std::strtod(sub.c_str(), &e);
         if (*e != '\0') {
@@ -157,13 +156,13 @@ vector <TypeVector> readData(string alg, int &vsize, string filename) {
  * Second: some file with suffix .csv , with data of the vectors.
  * We will read the data from each line, which will be a single flower.
  * Third: Our method of calculation. AUC, MAN, CHB, CAN, MIN for each of the algorithms.
+ * @param alg algorithm to use
+ * @param v vector of double values
+ * @param k k - neighbors
+ * @param filename filename to use for algorithm
  * @return code 0 if works as expected.
 **/
-int runMain(int argc, char *argv[]) {
-    if (argc != 4) {                                                //If we don't have enough cmd line args
-        perror("Not enough command line arguments.");
-        return -1;
-    }
+string runMain(string alg, vector<double> v, int k, string filename) {
     if (validateAlg(argv[3]) != 1) {                            //Validation of correct user input for algorithm
         perror("Invalid algorithm name input.");
         return -1;
@@ -174,23 +173,23 @@ int runMain(int argc, char *argv[]) {
             return -1;
         }
     }
-    int k = stoi(argv[1]);
-    int fileVectorSize=-1;
+    int fileVectorSize = -1;
     vector <TypeVector> tv = readData(argv[3], fileVectorSize, argv[2]);
     map<string, int> names = getAllNames(tv);
-    while (true) {
-        vector<double> v = readVector();                          //Reading input vector data
+    while (true) {                                                //Loop allows user to do multiple tries
         if(v.size()!=fileVectorSize){
             cout<<"Your vector size does not match the excel file, try another vector"<<endl;
-            continue;
+            return null;
         } else
         if(v.size() == 0) {
             cout << "Too many whitespaces, try another vector" << endl;
-            continue;
+            return null;
         }
         for(int i=0;i<tv.size();i++){
             tv[i].calculateDistance(v,argv[3]);      //calculate distance for each vector in the file
         }
-        cout << knnAlgo(tv, k, names) << endl; //Checking which vectors from csv are closest to user's vector.
+        break;                                       //If calculations were made, leave loop
     }
+    string result = knnAlgo(tv, k, names);       //Checking which vectors from csv are closest to user's vector.
+    return result;
 }

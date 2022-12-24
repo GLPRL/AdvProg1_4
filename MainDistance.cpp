@@ -58,9 +58,7 @@ int validateAlg(string alg) {
 vector<double> readVector() {
     string lin;
     getline(cin, lin);
-    lin = ' ' + lin + " ";
-                                                     // If there is more than one space in a row, then return
-                                                     //and allow re-entry
+    lin = ' ' + lin + " ";                   // If there is more than one space in a row, then return and allow re-entry
     if (lin.find("  ") != string::npos) {
         vector<double> ve;
         return ve;

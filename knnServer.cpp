@@ -1,4 +1,6 @@
 #include "knnServer.h"
+#include "fileData.h"
+#include "MainDistance.h"
 /**
  * Function receives the in-buffer, returns vector of the data in buffer in orderly manner
  * @param buffer in-buffer
@@ -38,10 +40,6 @@ vector<double> getNumberVector(int size, vector<vector<char>> vector) {
         cout << v[i] << endl;
     return v;
 }
-string getK(vector<vector<char>> v, int size) {
-
-    //return s;
-}
 /**
  * Check if port is valid: If can be converted to int, and is in range 0-65535
  * @param port port to listen on
@@ -79,8 +77,6 @@ int main(int argc, char *argv[]) {
         cout << "Not enough arguments" << endl;
         return 1;
     }
-    for (int i = 0; i < argc; i++)
-        cout << argv[i] << endl;
     const int server_port = getPort(argv[2]);                                                     //Port validation
     if (server_port == -1) {
         cout << "No valid port entered. Exiting..." << endl;
@@ -98,6 +94,10 @@ int main(int argc, char *argv[]) {
     if (bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {                            //Bind socket
         perror("Error binding socket");
     }
+    int vSize = -1;
+    string fileName = argv[1];
+    vector<TypeVector> v = readData(vSize, fileName);
+    map<string, int> names = getAllNames(v);
     while (true) {                                                                       //Listen loop: for client input
         if (listen(sock, 5) < 0) {
             perror("Error listening to a socket");
@@ -108,52 +108,48 @@ int main(int argc, char *argv[]) {
         if (client_sock < 0) {
             perror("Error accepting client");
         }
-        char buffer[2048] = "3.1 0 20 30 MAN 3";
-        char bufferIn[2048];
+        char buffer[2048];
         int expected_data_len = sizeof(buffer);
-        int read_bytes = recv(client_sock, bufferIn, expected_data_len, 0);                //Receive data
-        if (buffer[0] == '-' && buffer[1] == '1') {                                 //TODO: find better way
-            close(sock);
-            return 0;
+        int read_bytes = recv(client_sock, buffer, expected_data_len, 0);                //Receive data
+        vector<vector<char>> vector = getVector(buffer);
+        int s = vector.size();
+        ::vector<double> numVector = getNumberVector(s, vector);
+        while(numVector[0] != -1 && numVector.size() == 1) {
+            if (numVector.size() == 0) {
+                char outBufferErr[] = "invalid input";
+                int sent_bytes = send(client_sock, outBufferErr, read_bytes, 0);
+                if (sent_bytes < 0) {
+                    perror("error sending to client");
+                }
+                continue;
+            }
+            int k = 3;          //TODO: how to get k
+            string alg(vector[vector.size() - 1].begin(), vector[vector.size() - 1].end());
+            string result = runMain(alg, v, numVector, k, names);
+            if (result.empty()) {
+                continue;
+            }
+            int resSize = result.length();
+            char outBuffer[2048];
+            for (int i = 0; i < resSize; i++)
+                outBuffer[i] = result[i];
+            int sent_bytes = send(client_sock, outBuffer, read_bytes, 0);
+            if (sent_bytes < 0) {
+                perror("error sending to client");
+            }
+            memset(buffer, 0, 2048);                                                             //Purge buffer
+            expected_data_len = sizeof(buffer);
+            read_bytes = recv(client_sock, buffer, expected_data_len, 0);                //Receive data
+            vector = getVector(buffer);
+            s = vector.size();
+            ::vector<double> numVector = getNumberVector(s, vector);
         }
-        cout << buffer << endl;
         if (read_bytes == 0) {
             cout << "Closed" << endl;                                       //TODO: close connection
         } else if (read_bytes < 0) {
             perror("Error reading from client");
         }
-        vector<vector<char>> vector = getVector(buffer);
-        int s = vector.size();
-        cout << s << endl;
-        for (int i = 0; i < s; i++)
-            cout << buffer[i] << endl;
-        //::vector<double> numVector = getNumberVector(s, vector);
-        //for (int i = 0; i < numVector.size(); i++)
-        //    cout << numVector[i] << endl;
-        //if (numVector.size() == 0) {
-        //    char outBufferErr[] = "invalid input";
-        //    int sent_bytes = send(client_sock, outBufferErr, read_bytes, 0);
-        //    continue;
-        //}
-        string alg(vector[vector.size()-1].begin(), vector[vector.size()-1].end());
-        cout << "Alg:" << alg << endl;
-        //getK(vector, s);
-        //string kString = getK(vector, s);
-        //cout << kString << endl;
-        //int k = stod(kString);
-        //cout << k << endl;
-        string fileName = argv[1];                                                          //Get filename
-        //string result = runMain(alg, numVector, k, argv[1]);                             //Run KNN algorithm
-        //if (result.empty()) {
-        //    continue;
-        //}
-        //int resSize = result.length();
-        char outBuffer[2048];
-        //for (int i = 0; i < resSize; i++)
-        //    outBuffer[i] = result[i];                           //Copy data into outBuffer
-        //int sent_bytes = send(client_sock, outBuffer, read_bytes, 0);
-        //if (sent_bytes < 0) {
-        //    perror("error sending to client");
-        //}
+        close(client_sock);
+        return 0;
     }
 }

@@ -4,14 +4,7 @@
 
 #include "Algorithms.h"
 #include <algorithm>
-
-/**
- * Checks for name duplications.
- * @param name string to compare duplication with
- * @param tv comparing with TypeVector's types attribute
- * @return status if duplicate. 0 if is duplicate, 1 otherwise.
-**/
-using namespace std;
+#include "MainDistance.h"
 
 /**
  * Getting all the names, disregarding duplicates.
@@ -50,40 +43,6 @@ int validateAlg(string alg) {
     }
     return 0;
 }
-
-/**
- * Reads a vector from the user in accordance to the ex1 instructions.
- * Prints an error if the input is not as expected.
-**/
-vector<double> readVector() {
-    string lin;
-    getline(cin, lin);
-    lin = ' ' + lin + " ";
-                                                     // If there is more than one space in a row, then return
-                                                     //and allow re-entry
-    if (lin.find("  ") != string::npos) {
-        vector<double> ve;
-        return ve;
-    }
-    vector<double> v;
-    int pos = 0;
-    double x;
-    char *e;
-    while ((pos = lin.find(" ")) != string::npos) { // Loop until the end of the string each time separating the spaces.
-        string sub = lin.substr(0, pos);
-        x = std::strtod(sub.c_str(), &e);
-        if (*e != '\0') {
-            cout << "Error:" << sub.c_str() << " is not a number" << endl;; //if cannot be converted,
-            vector <double> verr;                                           // then allow re-entry
-            return verr;
-        }
-        v.push_back(x);
-        lin.erase(0, pos + 1);
-    }
-    v.erase(v.begin());
-    return v;
-}
-
 /**
  * Data aggregation. Fetches the data of the vector according to placements. Everything ex. the last item in the vector
  * will be converted to double; the last parameter will be of type string, as it's the name of the item.
@@ -92,10 +51,9 @@ vector<double> readVector() {
  * @param alg Our algorithm of calculation
  * @return a new TypeVector item, inserted into an array of this type.
 **/
-TypeVector aggregate(vector <string> vectorsString, string alg) {
+TypeVector aggregate(vector <string> vectorsString) {
     vector<double> vectors;
-    for (int i = 0;
-         i < vectorsString.size() - 1; i++) {                 //Inserts all the numbers into a new vector of type double
+    for (int i = 0; i < vectorsString.size() - 1; i++) {                     //Inserts all the numbers into a new vector
         try {
             double p=stod(vectorsString[i]);
             vectors.push_back(p);
@@ -104,7 +62,7 @@ TypeVector aggregate(vector <string> vectorsString, string alg) {
                 cout << "This excel file's vectors are not in accordance to instructions" << endl;
                 exit(-1);
         }
-    }                                                         //Item in last position in vectorsString will be the name!
+    }                                                         //Item in last position in vectorsString will be the name
     string name = vectorsString[vectorsString.size() - 1];
     TypeVector tv = TypeVector(vectors, name);                             //Create the new TypeVector and calc.
     return tv;
@@ -117,7 +75,7 @@ TypeVector aggregate(vector <string> vectorsString, string alg) {
  * @param k Amount of items to compare.
  * @param v Vector to compare with the CSV file.
 **/
-vector <TypeVector> readData(string alg, int &vsize, string filename) {
+vector <TypeVector> readData(int &vsize, string filename) {
     fstream fin;
     string line, word;
                                                                   //we need to select the algorithm according to string.
@@ -138,7 +96,7 @@ vector <TypeVector> readData(string alg, int &vsize, string filename) {
                 excelVectorSize = row.size() - 1;
                 firstLine = 0;
             }
-            TypeVector tVector = aggregate(row, alg);        // Inserts the new TypeVector into an array.
+            TypeVector tVector = aggregate(row);        // Inserts the new TypeVector into an array.
             typeVectors.push_back(tVector);
         }
     } else {
@@ -162,23 +120,19 @@ vector <TypeVector> readData(string alg, int &vsize, string filename) {
  * @param filename filename to use for algorithm
  * @return code 0 if works as expected.
 **/
-string runMain(string alg, vector<double> v, int k, string filename) { //TODO: modify runMan: read the file before while(true) in knnServer
+string runMain(string alg, vector<TypeVector> tv, vector<double> v, int k, map<string, int> names) {
     int fileVectorSize = -1;
-    vector <TypeVector> tv = readData(alg, fileVectorSize, filename);
-    map<string, int> names = getAllNames(tv);
-    while (true) {                                                //Loop allows user to do multiple tries
-        if(v.size()!=fileVectorSize){
-            cout << "Your vector size does not match the excel file, try another vector"<<endl;
-            return "";
-        } else
-        if(v.size() == 0) {
-            cout << "Too many whitespaces, try another vector" << endl;
-            return "";
-        }
-        for(int i=0;i<tv.size();i++){
-            tv[i].calculateDistance(v,alg);      //calculate distance for each vector in the file
-        }
-        break;                                       //If calculations were made, leave loop
+    //if(v.size()!=fileVectorSize){
+    //    cout << "Your vector size does not match the excel file, try another vector"<<endl;
+    //    return "";
+    //} else
+    if(v.size() == 0) {
+        cout << "Too many whitespaces, try another vector" << endl;
+        return "";
+    }
+    int size = tv.size();
+    for (int i = 0; i < size; i++) {
+        tv[i].calculateDistance(tv[i].getVector(), alg);               //Calc. distance according to user
     }
     string result = knnAlgo(tv, k, names);       //Checking which vectors from csv are closest to user's vector.
     return result;

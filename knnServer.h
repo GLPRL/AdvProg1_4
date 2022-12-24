@@ -12,6 +12,6 @@
 #include <string.h>
 #include <vector>
 #include "Algorithms.h"
-string runMain(string alg, vector<double> v, int k, string filename);
+#include "MainDistance.h"
 using namespace std;
 #endif //ADVPROG1_4_KNNSERVER_H

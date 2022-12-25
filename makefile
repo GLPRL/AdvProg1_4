@@ -1,9 +1,9 @@
 all: client.out server.out
 
-client.out:
-	g++ -std=c++11 TCPClient.cpp -o client.out
+client.out:						#Client file
+	g++ -std=c++11 KnnClient.cpp -o client.out
 
-server.out: knnServer.o Algorithms.o MainDistance.o TypeVector.o fileData.o
+server.out: knnServer.o Algorithms.o MainDistance.o TypeVector.o fileData.o			#Server files
 	g++ knnServer.o Algorithms.o MainDistance.o TypeVector.o fileData.o -o server.out
 
 knnServer.o: knnServer.cpp knnServer.h

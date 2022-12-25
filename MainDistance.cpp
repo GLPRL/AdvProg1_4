@@ -126,12 +126,12 @@ string runMain(string alg, vector<TypeVector> tv, vector<double> v, int k, map<s
     //    cout << "Your vector size does not match the excel file, try another vector"<<endl;
     //    return "";
     //} else
-    if(v.size() == 0) {
-        perror("Too many whitespaces, try another vector\n");
-        return "";
-    }
+    int vectorSize = v.size();
     int size = tv.size();
     for (int i = 0; i < size; i++) {
+        if (vectorSize != tv[i].getVector().size()) {
+            return "invalid input";
+        }
         tv[i].calculateDistance(v, alg);               //Calc. distance according to user
     }
     string result = knnAlgo(tv, k, names);       //Checking which vectors from csv are closest to user's vector.

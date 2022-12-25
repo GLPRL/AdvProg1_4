@@ -98,16 +98,16 @@ int main(int argc, char *argv[]) {
     string fileName = argv[1];
     vector<TypeVector> v = readData(vSize, fileName);
     map<string, int> names = getAllNames(v);
+    if (listen(sock, 5) < 0) {
+        perror("Error listening to a socket");
+    }
+    struct sockaddr_in client_sin;
+    unsigned int addr_len = sizeof(client_sin);
+    int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len);     //Accept new connection
+    if (client_sock < 0) {
+        perror("Error accepting client");
+    }
     while (true) {                                                                       //Listen loop: for client input
-        if (listen(sock, 5) < 0) {
-            perror("Error listening to a socket");
-        }
-        struct sockaddr_in client_sin;
-        unsigned int addr_len = sizeof(client_sin);
-        int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len);     //Accept new connection
-        if (client_sock < 0) {
-            perror("Error accepting client");
-        }
         char buffer[2048];
         int expected_data_len = sizeof(buffer);
         int read_bytes = recv(client_sock, buffer, expected_data_len, 0);                //Receive data
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
         //int s = vector.size();
         ::vector<double> numVector = {6.9, 3.1, 4.9, 1.5};           //TODO: getNumVector function
         //while(numVector[0] != -1 && numVector.size() == 1)
-        while(numVector[0] != -1 && numVector.size() != 1){          //Read continuous data from client and send back
+        while(numVector[0] != -1 || numVector.size() != 1){          //Read continuous data from client and send back
             if (numVector.size() == 0) {
                 char outBufferErr[] = "invalid input";
                 int sent_bytes = send(client_sock, outBufferErr, read_bytes, 0);
@@ -147,7 +147,8 @@ int main(int argc, char *argv[]) {
             read_bytes = recv(client_sock, buffer, expected_data_len, 0);                //Receive data
             //vector = getVector(buffer);
             //s = vector.size();
-            numVector = {1.5, 6, 3.3, 6.3};
+            numVector = {-1, 2};
+            numVector.shrink_to_fit();
             //::vector<double> numVector = getNumberVector(s, vector); TODO: getNumVector function
         }
         if (read_bytes == 0) {
@@ -156,6 +157,16 @@ int main(int argc, char *argv[]) {
             perror("Error reading from client\n");
         }
         close(client_sock);
+        if (listen(sock, 5) < 0) {
+            perror("Error listening to a socket");
+        }
+        struct sockaddr_in client_sin;
+        unsigned int addr_len = sizeof(client_sin);
+        int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len);     //Accept new connection
+        if (client_sock < 0) {
+            perror("Error accepting client");
+        }
+
         //return 0;
     }
 }

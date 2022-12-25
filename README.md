@@ -47,15 +47,15 @@ Each one of them is required for correct functionality and connectivity of the s
 ```
 ./server.out <file> <port>
 ```
-- <file>: Must be in the same directory as project files.
-- <port>: A valid port in range of 0-65535. We will check at runtime.
+- file: Must be in the same directory as project files.
+- port: A valid port in range of 0-65535. We will check at runtime.
 
 #### Run the client with:
 ```
 ./client.out <ip> <port>
 ```
-- <ip>: Must be 127.0.0.1 (Unless client is run on a different computer)
-- <port>: A valid port in range of 0-65535. We will check at runtime.
+- ip: Must be 127.0.0.1 (Unless client is run on a different computer)
+- port: A valid port in range of 0-65535. We will check at runtime.
    
 
 ## General implementation details

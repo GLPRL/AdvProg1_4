@@ -56,7 +56,7 @@ Each one of them is required for correct functionality and connectivity of the s
 ```
 - ip: Must be 127.0.0.1 (Unless client is run on a different computer)
 - port: A valid port in range of 0-65535. We will check at runtime.
-   
+   (Don't forget **not** to write with the triangle brackets)
 
 ## General implementation details
 ### Distance Algorithms

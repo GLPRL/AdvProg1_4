@@ -149,4 +149,4 @@ count the K - first TypeVectors, and find the one who appeared the most times - 
 running, sent back to the client as simple text to print.
 After finishing, the server will wait for more data to be sent, and allows up to 5 clients simultaneously.
    
-###### Images and some explanations sourced from Wikipedia pages of the distance formulas
+<sub> Images and some explanations sourced from Wikipedia pages of the distance formulas </sub>

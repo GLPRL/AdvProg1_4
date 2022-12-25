@@ -49,7 +49,7 @@ int getPort(string port) {
     int size = port.size();
     for (int i = 0; i < size; i++) {                                  //Iterate through the port characters and validate
         if (isdigit(port[i]) == false) {
-            perror("Port must be an integer");
+            perror("Port must be an integer\n");
             return -1;
         }
     }
@@ -74,17 +74,17 @@ int getPort(string port) {
  */
 int main(int argc, char *argv[]) {
     if (argc < 3) {
-        cout << "Not enough arguments" << endl;
+        perror("Not enough arguments\n");
         return 1;
     }
     const int server_port = getPort(argv[2]);                                                     //Port validation
     if (server_port == -1) {
-        cout << "No valid port entered. Exiting..." << endl;
+        perror("No valid port entered. Exiting\n");
         return 1;
     }
     int sock = socket(AF_INET, SOCK_STREAM, 0);                                    //Declaring socket
     if (sock < 0) {
-        perror("Error creating socket");
+        perror("Error creating socket\n");
     }
     struct sockaddr_in sin;
     memset(&sin, 0, sizeof(sin));
@@ -120,40 +120,42 @@ int main(int argc, char *argv[]) {
                 char outBufferErr[] = "invalid input";
                 int sent_bytes = send(client_sock, outBufferErr, read_bytes, 0);
                 if (sent_bytes < 0) {
-                    perror("error sending to client");
+                    perror("error sending to client\n");
                 }
                 continue;
             }
             int k = 3;          //TODO: how to get k
             //string alg(vector[vector.size() - 1].begin(), vector[vector.size() - 1].end());
-            string alg = "MAN";
+            string alg = "MIN";
             string result = runMain(alg, v, numVector, k, names);
-            cout << result << endl;
             if (result.empty()) {
                 continue;
             }
             int resSize = result.length();
+            read_bytes = resSize;
             char outBuffer[2048];
             for (int i = 0; i < resSize; i++)
                 outBuffer[i] = result[i];
+            expected_data_len = sizeof(buffer);
             int sent_bytes = send(client_sock, outBuffer, read_bytes, 0);
             if (sent_bytes < 0) {
-                perror("error sending to client");
+                perror("error sending to client\n");
             }
-            memset(buffer, 0, 2048);                                                             //Purge buffer
+            memset(&result, 0, sizeof(result));
+            memset(&buffer, 0, 2048);                                                             //Purge buffer
             expected_data_len = sizeof(buffer);
             read_bytes = recv(client_sock, buffer, expected_data_len, 0);                //Receive data
             //vector = getVector(buffer);
             //s = vector.size();
-            numVector = {-1};
+            numVector = {1.5, 6, 3.3, 6.3};
             //::vector<double> numVector = getNumberVector(s, vector); TODO: getNumVector function
         }
         if (read_bytes == 0) {
             cout << "Closed" << endl;                                       //TODO: close connection
         } else if (read_bytes < 0) {
-            perror("Error reading from client");
+            perror("Error reading from client\n");
         }
-        //close(client_sock);
+        close(client_sock);
         //return 0;
     }
 }

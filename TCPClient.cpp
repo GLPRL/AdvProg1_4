@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <vector>
 
 using namespace std;
 /**
@@ -40,7 +41,7 @@ int getPort(string port) {
  */
 int main(int argc, char* argv[]) {
     if (argc != 3) {
-        cout << "Wrong amount of command line arguments" << endl;
+        perror("Wrong amount of command line arguments\n");
         return 1;
     }
     //TODO: Force the 127.0.0.1 loopback/localhost IP?
@@ -48,7 +49,7 @@ int main(int argc, char* argv[]) {
     const int port_no = getPort(argv[2]);
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
-        perror("error creating socket");
+        perror("error creating socket\n");
     }
     struct sockaddr_in sin;                                                                               //setup socket
     memset(&sin, 0, sizeof(sin));
@@ -56,16 +57,18 @@ int main(int argc, char* argv[]) {
     sin.sin_addr.s_addr = inet_addr(ip_address);
     sin.sin_port = htons(port_no);
     if (connect(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {                   //Connected to server
-        perror("error connecting to server");
+        perror("Error connecting to server");
+    }
+    //TODO: data_addr[] = input with cin
+    char data_addr[] = "3.1 0 20 30 MAN 3\n";                                                         //Data to send
+    int data_len = strlen(data_addr);
+    int sent_bytes = send(sock, data_addr, data_len, 0);                             //Sending data
+    if (sent_bytes < 0) {
+        perror("Error sending data to server\n");
+        return 1;
     }
     while(true) {                                                                                       //Data send loop
-        char data_addr[] = "3.1 0 20 30 MAN 3\n";                                                         //Data to send
-        int data_len = strlen(data_addr);
-        int sent_bytes = send(sock, data_addr, data_len, 0);                             //Sending data
-        if (sent_bytes < 0) {
-            perror("Error sending data to server");
-        }
-        char buffer[4096];                                                       //Clearing space for answer from server
+        char buffer[2048];                                                       //Clearing space for answer from server
         int expected_data_len = sizeof(buffer);
         int read_bytes = recv(sock, buffer, expected_data_len, 0);                 //Receive from server
         if (read_bytes == 0) {                                                                               //If closed
@@ -75,8 +78,17 @@ int main(int argc, char* argv[]) {
         } else if (read_bytes < 0) {                                                                          //If error
             perror("Error reading data from server");
         } else {
-            cout << buffer;                                                                               //Print result
+            cout << buffer << endl;                                                                       //Print result
         }
         memset(&buffer, 0, sizeof(buffer));                                       //Purge past data from buffer
+        //TODO: data_addr1[] = input with cin
+        char data_addr1[] = "-1";
+        int data_len1 = strlen(data_addr1);
+        int sent_bytes = send(sock, data_addr1, data_len1, 0);                           //Sending data
+        if (sent_bytes < 0) {
+            perror("Error sending data to server");
+            return 1;
+        }
+        continue;
     }
 }

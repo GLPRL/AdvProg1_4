@@ -59,7 +59,7 @@ TypeVector aggregate(vector <string> vectorsString) {
             vectors.push_back(p);
         }
         catch (...){
-                cout << "This excel file's vectors are not in accordance to instructions" << endl;
+                perror("This excel file's vectors are not in accordance to instructions\n");
                 exit(-1);
         }
     }                                                         //Item in last position in vectorsString will be the name
@@ -100,7 +100,7 @@ vector <TypeVector> readData(int &vsize, string filename) {
             typeVectors.push_back(tVector);
         }
     } else {
-        perror("No such file or directory");
+        perror("No such file or directory\n");
         exit(-1);
     }
     fin.close();
@@ -127,13 +127,12 @@ string runMain(string alg, vector<TypeVector> tv, vector<double> v, int k, map<s
     //    return "";
     //} else
     if(v.size() == 0) {
-        cout << "Too many whitespaces, try another vector" << endl;
+        perror("Too many whitespaces, try another vector\n");
         return "";
     }
-    cout << alg << endl;
     int size = tv.size();
     for (int i = 0; i < size; i++) {
-        tv[i].calculateDistance(tv[i].getVector(), alg);               //Calc. distance according to user
+        tv[i].calculateDistance(v, alg);               //Calc. distance according to user
     }
     string result = knnAlgo(tv, k, names);       //Checking which vectors from csv are closest to user's vector.
     return result;

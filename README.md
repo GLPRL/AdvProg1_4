@@ -122,11 +122,11 @@ Our server will deal with reading from CSV file (Only once, at initial start), a
 Next, it will initiate a sequence of operations to start listening on a given port, waiting for clients.
 Once a client has reached out, it'll accept it, and receive data, as follows:
 1) A list of numbers: the vector to process and classify. Each number will be verified for correctness at client side.
-2) Distance calculation method: - AUC for Euclidean;
-                                - MAN for Manhattan;
-                                - CHB for Chebyshev;
-                                - CAN for Canberra;
-                                - MIN for Minkowsky;
+2) Distance calculation method: > AUC for Euclidean;
+                                > MAN for Manhattan;
+                                > CHB for Chebyshev;
+                                > CAN for Canberra;
+                                > MIN for Minkowsky;
                                 Each algorithm selection will be verified for correctness at client side.
 3) Natural number (K): The user's selection for K - nearest - neighbors.
 
@@ -136,4 +136,5 @@ into TypeVector, and the user's input vector, according to user's algorithm sele
 After the distance was calculated, we sort using a specialized "less"-operator, that will compare by distances (smallest distance is first),
 count the K - first TypeVectors, and find the one who appeared the most times - and return the type of it, back to the main function which server
 running, sent back to the client as simple text to print.
+After finishing, the server will wait for more data to be sent, and allows up to 5 clients simultaneously.
 ###### Images and some explanations sourced from Wikipedia pages of the distance formulas

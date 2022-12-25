@@ -39,9 +39,13 @@ First, you must check if a port is available. Do it with
 netstat
 ```
 Look for the following attributes:
+
 **Type:** STREAM
+
 **State:** CONNECTED
+
 **Path:** (none/empty)
+
 Each one of them is required for correct functionality and connectivity of the server.
 #### Run the server with:
 ```

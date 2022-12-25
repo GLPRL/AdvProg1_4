@@ -3,8 +3,8 @@ all: client.out server.out
 client.out:						#Client file
 	g++ -std=c++11 KnnClient.cpp -o client.out
 
-server.out: knnServer.o Algorithms.o MainDistance.o TypeVector.o fileData.o			#Server files
-	g++ knnServer.o Algorithms.o MainDistance.o TypeVector.o fileData.o -o server.out
+server.out: knnServer.o Algorithms.o MainDistance.o TypeVector.o		#Server files
+	g++ knnServer.o Algorithms.o MainDistance.o TypeVector.o -o server.out
 
 knnServer.o: knnServer.cpp knnServer.h
 	g++ -c knnServer.cpp
@@ -17,9 +17,6 @@ MainDistance.o: MainDistance.cpp
 
 TypeVector.o: TypeVector.cpp TypeVector.h
 	g++ -c TypeVector.cpp
-
-fileData.o: fileData.cpp fileData.h
-	g++ -c fileData.cpp
 
 clean:
 	rm *.o *.out

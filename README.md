@@ -15,13 +15,13 @@ attributes:
 4) Petals length
 We will find the closest neighbors and classify the input vectors as the flower.
 
-Comparisons can be made between each family: Irises, Wines, Beans, etc etc.
+Comparisons can be made between each family: Irises, Wines, Beans, etc etc, each archtype has their own attributes to compare.
 
 ### Compliation Instructions:
 First, clone/download zip of the repository, 
 cloning:
 ```
-git clone https://github.com/GLPRL/AdvProg1-3
+git clone https://github.com/GLPRL/AdvProg1_4
 ```
 (ZIP requires unpacking, use your preffered method)
 Among all the files, there's a makefile for using make:
@@ -32,22 +32,31 @@ make
 Then, the output will be a.out. Now you can run it:
 
 **For the program to identify the input files, they need to be in the same directory with the project files**
-
+This time, our makefile will compile TWO executables: the KnnClient and the KnnServer.
+Run instructions for server:
+First, you must check if a port is available. Do it with 
 ```
-./a.out <Some integer for K> <file.csv> <ALG>
+netstat
 ```
+Look for the following attributes:
+**Type:** STREAM
+**State:** CONNECTED
+**Path:** (none/empty)
+Each one of them is required for correct functionality and connectivity of the server.
+#### Run the server with:
+```
+./server.out <file> <port>
+```
+- <file>: Must be in the same directory as project files.
+- <port>: A valid port in range of 0-65535. We will check at runtime.
 
+#### Run the client with:
+```
+./client.out <ip> <port>
+```
+- <ip>: Must be 127.0.0.1 (Unless client is run on a different computer)
+- <port>: A valid port in range of 0-65535. We will check at runtime.
    
-Instruction for fillers (Any <>):
-- <K> must be a natural number (K>0). We will check if it is valid.
-- <file.csv> is required to be in the same directory with project files/a.out . We will check for this requirement.
-- <ALG> must be one of the following, resepectively to the algorithms we implemented:
-   1) AUC for Euclidan
-   2) MAN for Manhattan
-   3) CHB for Chebyshev
-   4) CAN for Canberra
-   5) MIN for Minkowski
- The program will check if the parameters are valid.
 
 ## General implementation details
 ### Distance Algorithms

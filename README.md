@@ -1,8 +1,10 @@
-# AdvProg1-4: KNN: K-Nearest Neighbors
+# AdvProg1-4: KNN Server
 Fourth Task in Advanced Programming 1 course 2023/838921001
 
 Authors:
+
 Gal Pearl,
+
 Dekel Schreiber
 
 In this task, there will be five algorithms for calculating vectors, in different approaches.

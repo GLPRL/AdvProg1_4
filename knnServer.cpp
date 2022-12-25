@@ -62,7 +62,7 @@ int getPort(string port) {
  * @return nothing
  */
 int main(int argc, char *argv[]) {
-    if (argc < 3) {
+    if (argc < 3) {                                                                               //Arg count validation
         perror("Not enough arguments\n");
         return 1;
     }
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
         perror("No valid port entered. Exiting\n");
         return 1;
     }
-    int sock = socket(AF_INET, SOCK_STREAM, 0);                                    //Declaring socket
+    int sock = socket(AF_INET, SOCK_STREAM, 0);                                   //Declaring socket
     if (sock < 0) {
         perror("Error creating socket\n");
     }
@@ -80,81 +80,14 @@ int main(int argc, char *argv[]) {
     sin.sin_family = AF_INET;
     sin.sin_addr.s_addr = INADDR_ANY;
     sin.sin_port = htons(server_port);
-    if (bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {                            //Bind socket
+    if (bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {                              //Bind socket
         perror("Error binding socket");
     }
     int vSize = -1;
     string fileName = argv[1];
     vector<TypeVector> v = readData(vSize, fileName);
     map<string, int> names = getAllNames(v);
-    if (listen(sock, 5) < 0) {
-        perror("Error listening to a socket");
-    }
-    struct sockaddr_in client_sin;
-    unsigned int addr_len = sizeof(client_sin);
-    int client_sock = accept(sock, (struct sockaddr *) &client_sin, &addr_len);     //Accept new connection
-    if (client_sock < 0) {
-        perror("Error accepting client");
-    }
     while (true) {                                                                       //Listen loop: for client input
-        char buffer[2048];
-        int expected_data_len = sizeof(buffer);
-        int read_bytes = recv(client_sock, buffer, expected_data_len, 0);                //Receive data
-        vector<double> numVector;
-        int k;
-        string distanceType;
-        extract(buffer,k,distanceType,numVector);
-        cout<<"------"<<endl;
-        cout<<k<<endl;
-        cout<<distanceType<<endl;
-        for(int i=0;i<numVector.size();i++){
-            cout<<numVector[i]<<endl;
-        }
-        //vector<vector<char>> vector = getVector(buffer);           //TODO: get data from vector
-        //int s = vector.size();
-        //while(numVector[0] != -1 && numVector.size() == 1)
-        while(numVector[0] != -1 || numVector.size() != 1){          //Read continuous data from client and send back
-            if (numVector.size() == 0) {
-                char outBufferErr[] = "invalid input";
-                int sent_bytes = send(client_sock, outBufferErr, read_bytes, 0);
-                if (sent_bytes < 0) {
-                    perror("error sending to client\n");
-                }
-                continue;
-            }
-            int k = 3;          //TODO: how to get k
-            //string alg(vector[vector.size() - 1].begin(), vector[vector.size() - 1].end());
-            string alg = "MIN";
-            string result = runMain(alg, v, numVector, k, names);
-            if (result.empty()) {
-                continue;
-            }
-            int resSize = result.length();
-            read_bytes = resSize;
-            char outBuffer[2048];
-            for (int i = 0; i < resSize; i++)
-                outBuffer[i] = result[i];
-            expected_data_len = sizeof(buffer);
-            int sent_bytes = send(client_sock, outBuffer, read_bytes, 0);
-            if (sent_bytes < 0) {
-                perror("error sending to client\n");
-            }
-            memset(&result, 0, sizeof(result));
-            memset(&buffer, 0, 2048);                                                             //Purge buffer
-            expected_data_len = sizeof(buffer);
-            read_bytes = recv(client_sock, buffer, expected_data_len, 0);                //Receive data
-            //vector = getVector(buffer);
-            //s = vector.size();
-            numVector = {-1, 2};
-            numVector.shrink_to_fit();
-            //::vector<double> numVector = getNumberVector(s, vector); TODO: getNumVector function
-        }
-        if (read_bytes == 0) {
-            cout << "Closed" << endl;                                       //TODO: close connection
-        } else if (read_bytes < 0) {
-            perror("Error reading from client\n");
-        }
-        close(client_sock);
         if (listen(sock, 5) < 0) {
             perror("Error listening to a socket");
         }
@@ -164,7 +97,36 @@ int main(int argc, char *argv[]) {
         if (client_sock < 0) {
             perror("Error accepting client");
         }
-
-        //return 0;
+        char buffer[2048];
+        int expected_data_len = sizeof(buffer);
+        while (true){
+            int read_bytes = recv(client_sock, buffer, expected_data_len, 0);            //Receive data
+            if (read_bytes < 0) {
+                perror("Error reading from client\n");
+                continue;
+            }
+            vector<double> numVector;
+            int k;
+            string distanceType;
+            if (buffer[0] == '-' && buffer[1] == '1' && buffer[3] == '\0') {                    //If received end signal
+                close(client_sock);
+                break;
+            }
+            extract(buffer,k,distanceType,numVector);                         //Extract the data from buffer
+            string result = runMain (distanceType, v, numVector, k, names);
+            int resSize = result.length();                              //Read continuous data from client and send back
+            read_bytes = resSize;
+            char outBuffer[2048];
+            for (int i = 0; i < resSize; i++)
+                outBuffer[i] = result[i];
+            expected_data_len = sizeof(buffer);
+            int sent_bytes = send(client_sock, outBuffer, read_bytes, 0);     //Send data back to client
+            if (sent_bytes < 0) {
+                perror("error sending to client\n");
+            }
+            memset(&result, 0, sizeof(result));                                           //Purge result string
+            memset(&buffer, 0, 2048);                                                            //Purge buffer
+            expected_data_len = sizeof(buffer);                                                       //Prep for receive
+        }
     }
 }

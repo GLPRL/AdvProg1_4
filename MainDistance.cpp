@@ -121,11 +121,6 @@ vector <TypeVector> readData(int &vsize, string filename) {
  * @return code 0 if works as expected.
 **/
 string runMain(string alg, vector<TypeVector> tv, vector<double> v, int k, map<string, int> names) {
-    int fileVectorSize = -1;
-    //if(v.size()!=fileVectorSize){
-    //    cout << "Your vector size does not match the excel file, try another vector"<<endl;
-    //    return "";
-    //} else
     int vectorSize = v.size();
     int size = tv.size();
     for (int i = 0; i < size; i++) {

@@ -124,12 +124,13 @@ Once a client has reached out, it'll accept it, and receive data, as follows:
 1) A list of numbers: the vector to process and classify. Each number will be verified for correctness at client side.
 2) Distance calculation method: 
    
-   > AUC for Euclidean;
-   > MAN for Manhattan;
-   > CHB for Chebyshev;
-   > CAN for Canberra;
-   > MIN for Minkowsky;
+   - AUC for Euclidean;
+   - MAN for Manhattan;
+   - CHB for Chebyshev;
+   - CAN for Canberra;
+   - MIN for Minkowsky;
 Each algorithm selection will be verified for correctness at client side.
+   
 3) Natural number (K): The user's selection for K - nearest - neighbors.
 
 Afterwards, it will build all the data that was received as vector of double precision numbers, string and an integer

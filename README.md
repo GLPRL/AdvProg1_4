@@ -122,13 +122,8 @@ It contains three field:
    - Vector of double type numbers. Stores values of location in some dimention
    - String, describing the type of the vector. Ex.: Our vector is a type of flower, "iris-versicolor". So, "iris-versicolor" will be stored.
    - Distance of type double. We will store the distance of the vector with a given user vector, according to algorithm of their choosing.
-### Classification
-We receive some vector of some size, and calculate it's differences between all the known vectors.
-Afterwards, we find the K closest neighbors - their attributes are the closest to our data vector.
-Lastly, we classify our input vector according to the type we see has the most neighbors to our vector,
-and print our decision to the user.
    
-### Server - Client
+### Server - Client Classification Process
 Our server will deal with reading from CSV file (Only once, at initial start), and store the data in a vector of TypeVector.
 Next, it will initiate a sequence of operations to start listening on a given port, waiting for clients.
 Once a client has reached out, it'll accept it, and receive data, as follows:

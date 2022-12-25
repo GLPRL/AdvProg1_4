@@ -13,6 +13,5 @@
 #include <vector>
 #include "Algorithms.h"
 #include "MainDistance.h"
-#include "fileData.h"
 using namespace std;
 #endif //ADVPROG1_4_KNNSERVER_H

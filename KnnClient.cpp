@@ -5,8 +5,71 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <vector>
 
 using namespace std;
+int readVector(string &distanceType, int &k,vector<double> &v,char c[] ) {
+    string lin;
+    getline(cin, lin);
+    for(int i=0;i<lin.length();i++){
+        c[i]=lin[i];
+    }
+    c[lin.length()+1] = '\0';
+    if(lin.compare("-1")==0){
+        return 0;
+    }
+    lin = ' ' + lin + " ";
+    // If there is more than one space in a row, then return
+    //and allow re-entry
+    if (lin.find("  ") != string::npos) {
+        // vector<double> ve;
+        //return ve;
+        return -1;
+    }
+    //vector<double> v;
+    int pos = 0,readK=0,y;
+    double x;
+    char *e;
+    int wasDistance = 0;
+    // Loop until the end of the string each time separating the spaces.
+    while ((pos = lin.find(" ")) != string::npos) {
+        string sub = lin.substr(0, pos);
+        if(readK){
+            return -1;
+        }
+        if ((sub.compare("AUC") == 0)
+            || (sub.compare("MAN") == 0)
+            || (sub.compare("CHB") == 0)
+            || (sub.compare("CAN") == 0)
+            || (sub.compare("MIN") == 0)
+                ) {
+            wasDistance = 1;
+            distanceType = sub;
+
+        } else if(wasDistance) {
+            y = stoi(sub);
+            x = std::strtod(sub.c_str(), &e);
+            k=y;
+            if(k!=x){
+                return -1;
+            }
+            readK=1;
+
+        } else {
+            x = std::strtod(sub.c_str(), &e);
+            if (*e != '\0') {
+                return -1;
+            }
+            v.push_back(x);
+        }
+        lin.erase(0, pos + 1);
+    }
+    v.erase(v.begin());
+    if(wasDistance && readK) {
+        return 1;
+    }
+    return-1;
+}
 /**
  * Check if port is valid: If can be converted to int, and is in range 0-65535
  * @param port port to listen on
@@ -43,7 +106,7 @@ int main(int argc, char* argv[]) {
         perror("Wrong amount of command line arguments\n");
         return 1;
     }
-    //TODO: Force the 127.0.0.1 loopback/localhost IP?
+                                                                      //TODO: Force the 127.0.0.1 loopback/localhost IP?
     const char *ip_address = argv[1];                                                               //Options for socket
     const int port_no = getPort(argv[2]);
     int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -58,35 +121,34 @@ int main(int argc, char* argv[]) {
     if (connect(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {                   //Connected to server
         perror("Error connecting to server");
     }
-    //TODO: data_addr[] = input with cin
-    char data_addr[] = "3.1 0 20 30 MAN 3\n";                                                         //Data to send
-    int data_len = strlen(data_addr);
-    int sent_bytes = send(sock, data_addr, data_len, 0);                             //Sending data
-    if (sent_bytes < 0) {
-        perror("Error sending data to server\n");
-        return 1;
-    }
-    while(true) {                                                                                       //Data send loop
+    while(true) {
+        char data_addr[2048];
+        string s;
+        int p;
+        vector<double> v;
+        int result = readVector( s, p, v,data_addr);
+        if (result == -1) {
+            cout << "invalid input" << endl;
+           continue;
+        }
+        int data_len = strlen(data_addr);
+        int sent_bytes = send(sock, data_addr, data_len, 0);                             //Sending data
+        if (sent_bytes < 0) {
+            perror("Error sending data to server\n");
+            return 1;
+        }
         char buffer[2048];                                                       //Clearing space for answer from server
         int expected_data_len = sizeof(buffer);
         int read_bytes = recv(sock, buffer, expected_data_len, 0);                 //Receive from server
-        if (read_bytes == 0) {                                                                               //If closed
-            cout << "Connection closed" << endl;
-            close(sock);                                                             //close only when server closed
-            return 0;
-        } else if (read_bytes < 0) {                                                                          //If error
+        if (read_bytes < 0) {                                                                          //If error
             perror("Error reading data from server");
         } else {
             cout << buffer << endl;                                                                       //Print result
         }
         memset(&buffer, 0, sizeof(buffer));                                       //Purge past data from buffer
-        //TODO: data_addr1[] = input with cin
-        char data_addr1[] = "-1";
-        int data_len1 = strlen(data_addr1);
-        int sent_bytes = send(sock, data_addr1, data_len1, 0);                           //Sending data
-        if (sent_bytes < 0) {
-            perror("Error sending data to server");
-            return 1;
+        if(result==0){                                                                               // if -1 then close
+            close(sock);
+            exit(0);
         }
         continue;
     }

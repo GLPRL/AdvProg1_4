@@ -137,8 +137,10 @@ Once a client has reached out, it'll accept it, and receive data, as follows:
 Afterwards, it will build all the data that was received as vector of double precision numbers, string and an integer
 and will find what is the item's K closest neighbors: Calculate the distance between each record in the CSV file, that was translated
 into TypeVector, and the user's input vector, according to user's algorithm selection.
+   
 After the distance was calculated, we sort using a specialized "less"-operator, that will compare by distances (smallest distance is first),
 count the K - first TypeVectors, and find the one who appeared the most times - and return the type of it, back to the main function which server
 running, sent back to the client as simple text to print.
 After finishing, the server will wait for more data to be sent, and allows up to 5 clients simultaneously.
+   
 ###### Images and some explanations sourced from Wikipedia pages of the distance formulas

@@ -1,4 +1,4 @@
-# AdvProg1-3: KNN: K-Nearest Neighbors
+# AdvProg1-4: KNN: K-Nearest Neighbors
 Fourth Task in Advanced Programming 1 course 2023/838921001
 
 Authors:

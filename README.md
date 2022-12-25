@@ -26,14 +26,12 @@ cloning:
 git clone https://github.com/GLPRL/AdvProg1_4
 ```
 (ZIP requires unpacking, use your preffered method)
+and "cd" into the un-packed project folder
 Among all the files, there's a makefile for using make:
 
 ```
 make
 ```
-Then, the output will be a.out. Now you can run it:
-
-**For the program to identify the input files, they need to be in the same directory with the project files**
 
 This time, our makefile will compile TWO executables: the KnnClient and the KnnServer.
 
@@ -56,7 +54,8 @@ Each one of them is required for correct functionality and connectivity of the s
 ```
 ./server.out <file> <port>
 ```
-- file: Must be in the same directory as project files.
+**For the program to identify the CSV files, they need to be in the same directory with the project files**
+- file: Name of the CSV file. Must be in the same directory as project files.
 - port: A valid port in range of 0-65535. We will check at runtime.
 
 #### Run instructions for client:

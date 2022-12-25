@@ -130,7 +130,7 @@ Once a client has reached out, it'll accept it, and receive data, as follows:
    - CAN for Canberra;
    - MIN for Minkowsky;
    
-Each algorithm selection will be verified for correctness at client side.
+   Each algorithm selection will be verified for correctness at client side.
    
 3) Natural number (K): The user's selection for K - nearest - neighbors.
 

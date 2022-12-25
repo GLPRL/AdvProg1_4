@@ -1,3 +1,8 @@
+all: client.out server.out
+
+client.out:
+	g++ -std=c++11 TCPClient.cpp -o client.out
+
 server.out: knnServer.o Algorithms.o MainDistance.o TypeVector.o fileData.o
 	g++ knnServer.o Algorithms.o MainDistance.o TypeVector.o fileData.o -o server.out
 
@@ -17,4 +22,4 @@ fileData.o: fileData.cpp fileData.h
 	g++ -c fileData.cpp
 
 clean:
-	rm *.o server.out
+	rm *.o *.out

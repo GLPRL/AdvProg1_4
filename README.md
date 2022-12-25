@@ -116,5 +116,24 @@ We receive some vector of some size, and calculate it's differences between all 
 Afterwards, we find the K closest neighbors - their attributes are the closest to our data vector.
 Lastly, we classify our input vector according to the type we see has the most neighbors to our vector,
 and print our decision to the user.
+   
+### Server - Client
+Our server will deal with reading from CSV file (Only once, at initial start), and store the data in a vector of TypeVector.
+Next, it will initiate a sequence of operations to start listening on a given port, waiting for clients.
+Once a client has reached out, it'll accept it, and receive data, as follows:
+1) A list of numbers: the vector to process and classify. Each number will be verified for correctness at client side.
+2) Distance calculation method: - AUC for Euclidean;
+                                - MAN for Manhattan;
+                                - CHB for Chebyshev;
+                                - CAN for Canberra;
+                                - MIN for Minkowsky;
+                                Each algorithm selection will be verified for correctness at client side.
+3) Natural number (K): The user's selection for K - nearest - neighbors.
 
+Afterwards, it will build all the data that was received as vector of double precision numbers, string and an integer
+and will find what is the item's K closest neighbors: Calculate the distance between each record in the CSV file, that was translated
+into TypeVector, and the user's input vector, according to user's algorithm selection.
+After the distance was calculated, we sort using a specialized "less"-operator, that will compare by distances (smallest distance is first),
+count the K - first TypeVectors, and find the one who appeared the most times - and return the type of it, back to the main function which server
+running, sent back to the client as simple text to print.
 ###### Images and some explanations sourced from Wikipedia pages of the distance formulas

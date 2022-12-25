@@ -106,7 +106,6 @@ int main(int argc, char* argv[]) {
         perror("Wrong amount of command line arguments\n");
         return 1;
     }
-                                                                      //TODO: Force the 127.0.0.1 loopback/localhost IP?
     const char *ip_address = argv[1];                                                               //Options for socket
     const int port_no = getPort(argv[2]);
     int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -121,13 +120,13 @@ int main(int argc, char* argv[]) {
     if (connect(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {                   //Connected to server
         perror("Error connecting to server");
     }
-    while(true) {
+    while (true) {                                                                                      //Send data loop
         char data_addr[2048];
         string s;
         int p;
         vector<double> v;
         int result = readVector( s, p, v,data_addr);
-        if (result == -1) {
+        if (result == -1) {                                                                           //Is invalid input
             cout << "invalid input" << endl;
            continue;
         }
@@ -140,7 +139,7 @@ int main(int argc, char* argv[]) {
         char buffer[2048];                                                       //Clearing space for answer from server
         int expected_data_len = sizeof(buffer);
         int read_bytes = recv(sock, buffer, expected_data_len, 0);                 //Receive from server
-        if (read_bytes < 0) {                                                                          //If error
+        if (read_bytes < 0) {                                                                                 //If error
             perror("Error reading data from server");
         } else {
             cout << buffer << endl;                                                                       //Print result

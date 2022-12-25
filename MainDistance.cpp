@@ -18,37 +18,10 @@ map<string, int> getAllNames(vector <TypeVector> tv) {
     }
     return names;
 }
-
-/**
- * Checks if the alg of choosing is valid.
- * return 0 if not, otherwise 1.
- * @param alg algorithm of choosing
- * @return T/F if the input of algorithm of choosing is correct
-**/
-int validateAlg(string alg) {
-    if (alg.compare("AUC") == 0) {
-        return 1;
-    }
-    if (alg.compare("MAN") == 0) {
-        return 1;
-    }
-    if (alg.compare("CHB") == 0) {
-        return 1;
-    }
-    if (alg.compare("CAN") == 0) {
-        return 1;
-    }
-    if (alg.compare("MIN") == 0) {
-        return 1;
-    }
-    return 0;
-}
 /**
  * Data aggregation. Fetches the data of the vector according to placements. Everything ex. the last item in the vector
  * will be converted to double; the last parameter will be of type string, as it's the name of the item.
  * @param vectorsString Raw data, as fetched from CSV file
- * @param v User-inputted vector.
- * @param alg Our algorithm of calculation
  * @return a new TypeVector item, inserted into an array of this type.
 **/
 TypeVector aggregate(vector <string> vectorsString) {
@@ -67,13 +40,11 @@ TypeVector aggregate(vector <string> vectorsString) {
     TypeVector tv = TypeVector(vectors, name);                             //Create the new TypeVector and calc.
     return tv;
 }
-
 /**
  * Open a CSV file here. We will build an instance of a named vector, contains: name, the actual vector and diff
  * We check for compliance in sizes and if the file was successfully opened.
- * @param alg Distance algorithms to use
- * @param k Amount of items to compare.
- * @param v Vector to compare with the CSV file.
+ * @param vsize size of vector in file
+ * @param filename name of file to extract data from
 **/
 vector <TypeVector> readData(int &vsize, string filename) {
     fstream fin;
@@ -109,15 +80,13 @@ vector <TypeVector> readData(int &vsize, string filename) {
 }
 
 /**
- * Main function. We receive several command line arguments: 4 in total
- * First: some int K: number of neighbors. K is positive integer
- * Second: some file with suffix .csv , with data of the vectors.
- * We will read the data from each line, which will be a single flower.
- * Third: Our method of calculation. AUC, MAN, CHB, CAN, MIN for each of the algorithms.
+ * Function to run knnAlgo and verify correctness of vector sizes.
+ * Running the main requirements for our KNN algorithm to function properly.
  * @param alg algorithm to use
- * @param v vector of double values
- * @param k k - neighbors
- * @param filename filename to use for algorithm
+ * @param tv TypeVectors vector to calculate their distance from v
+ * @param v vector of attributes
+ * @param k k closest neighbor, used for KnnAlgo function
+ * @param names map of names and amount of appearances to update in KnnAlgo
  * @return code 0 if works as expected.
 **/
 string runMain(string alg, vector<TypeVector> tv, vector<double> v, int k, map<string, int> names) {
@@ -127,8 +96,8 @@ string runMain(string alg, vector<TypeVector> tv, vector<double> v, int k, map<s
         if (vectorSize != tv[i].getVector().size()) {
             return "invalid input";
         }
-        tv[i].calculateDistance(v, alg);               //Calc. distance according to user
+        tv[i].calculateDistance(v, alg);                               //Calc. distance according to user
     }
-    string result = knnAlgo(tv, k, names);       //Checking which vectors from csv are closest to user's vector.
+    string result = knnAlgo(tv, k, names);     //Checking which vectors from csv are closest to user's vector.
     return result;
 }

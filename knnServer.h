@@ -1,5 +1,5 @@
 /**
- * knnServer header file
+ * KnnServer header file
  */
 #ifndef ADVPROG1_4_KNNSERVER_H
 #define ADVPROG1_4_KNNSERVER_H

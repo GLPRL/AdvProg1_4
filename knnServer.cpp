@@ -111,10 +111,11 @@ int main(int argc, char *argv[]) {
         char buffer[2048];
         int expected_data_len = sizeof(buffer);
         int read_bytes = recv(client_sock, buffer, expected_data_len, 0);                //Receive data
-        vector<vector<char>> vector = getVector(buffer);
-        int s = vector.size();
-        ::vector<double> numVector = getNumberVector(s, vector);
-        while(numVector[0] != -1 && numVector.size() == 1) {
+        //vector<vector<char>> vector = getVector(buffer);           //TODO: get data from vector
+        //int s = vector.size();
+        ::vector<double> numVector = {6.9, 3.1, 4.9, 1.5};           //TODO: getNumVector function
+        //while(numVector[0] != -1 && numVector.size() == 1)
+        while(numVector[0] != -1 && numVector.size() != 1){          //Read continuous data from client and send back
             if (numVector.size() == 0) {
                 char outBufferErr[] = "invalid input";
                 int sent_bytes = send(client_sock, outBufferErr, read_bytes, 0);
@@ -124,8 +125,10 @@ int main(int argc, char *argv[]) {
                 continue;
             }
             int k = 3;          //TODO: how to get k
-            string alg(vector[vector.size() - 1].begin(), vector[vector.size() - 1].end());
+            //string alg(vector[vector.size() - 1].begin(), vector[vector.size() - 1].end());
+            string alg = "MAN";
             string result = runMain(alg, v, numVector, k, names);
+            cout << result << endl;
             if (result.empty()) {
                 continue;
             }
@@ -140,16 +143,17 @@ int main(int argc, char *argv[]) {
             memset(buffer, 0, 2048);                                                             //Purge buffer
             expected_data_len = sizeof(buffer);
             read_bytes = recv(client_sock, buffer, expected_data_len, 0);                //Receive data
-            vector = getVector(buffer);
-            s = vector.size();
-            ::vector<double> numVector = getNumberVector(s, vector);
+            //vector = getVector(buffer);
+            //s = vector.size();
+            numVector = {-1};
+            //::vector<double> numVector = getNumberVector(s, vector); TODO: getNumVector function
         }
         if (read_bytes == 0) {
             cout << "Closed" << endl;                                       //TODO: close connection
         } else if (read_bytes < 0) {
             perror("Error reading from client");
         }
-        close(client_sock);
-        return 0;
+        //close(client_sock);
+        //return 0;
     }
 }

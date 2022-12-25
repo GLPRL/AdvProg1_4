@@ -1,5 +1,5 @@
-server.out: knnServer.o Algorithms.o MainDistance.o TypeVector.o
-	g++ knnServer.o Algorithms.o MainDistance.o TypeVector.o -o server.out
+server.out: knnServer.o Algorithms.o MainDistance.o TypeVector.o fileData.o
+	g++ knnServer.o Algorithms.o MainDistance.o TypeVector.o fileData.o -o server.out
 
 knnServer.o: knnServer.cpp knnServer.h
 	g++ -c knnServer.cpp

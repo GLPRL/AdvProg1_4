@@ -130,6 +130,7 @@ string runMain(string alg, vector<TypeVector> tv, vector<double> v, int k, map<s
         cout << "Too many whitespaces, try another vector" << endl;
         return "";
     }
+    cout << alg << endl;
     int size = tv.size();
     for (int i = 0; i < size; i++) {
         tv[i].calculateDistance(tv[i].getVector(), alg);               //Calc. distance according to user

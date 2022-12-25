@@ -34,8 +34,11 @@ make
 Then, the output will be a.out. Now you can run it:
 
 **For the program to identify the input files, they need to be in the same directory with the project files**
+
 This time, our makefile will compile TWO executables: the KnnClient and the KnnServer.
-Run instructions for server:
+
+##### Run instructions for server:
+
 First, you must check if a port is available. Do it with 
 ```
 netstat
@@ -56,12 +59,14 @@ Each one of them is required for correct functionality and connectivity of the s
 - file: Must be in the same directory as project files.
 - port: A valid port in range of 0-65535. We will check at runtime.
 
-#### Run the client with:
+#### Run instructions for client:
 ```
 ./client.out <ip> <port>
 ```
 - ip: Must be 127.0.0.1 (Unless client is run on a different computer)
 - port: A valid port in range of 0-65535. We will check at runtime.
+
+  for correct connection, client port must be different than the server port, if on same station.
    (Don't forget **not** to write with the triangle brackets)
 
 ## General implementation details

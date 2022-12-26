@@ -89,13 +89,13 @@ vector <TypeVector> readData(int &vsize, string filename) {
  * @param names map of names and amount of appearances to update in KnnAlgo
  * @return code 0 if works as expected.
 **/
-string runMain(string alg, vector<TypeVector> tv, vector<double> v, int k, map<string, int> names) {
+string runMain(string alg, vector<TypeVector> tv, vector<double> v, int k, map<string, int> names, int vSize) {
     int vectorSize = v.size();
     int size = tv.size();
+    if (vSize != v.size()) {
+        return "invalid input";
+    }
     for (int i = 0; i < size; i++) {
-        if (vectorSize != tv[i].getVector().size()) {
-            return "invalid input";
-        }
         tv[i].calculateDistance(v, alg);                               //Calc. distance according to user
     }
     string result = knnAlgo(tv, k, names);     //Checking which vectors from csv are closest to user's vector.

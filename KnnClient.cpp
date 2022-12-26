@@ -132,6 +132,7 @@ int main(int argc, char* argv[]) {
         }
         int data_len = strlen(data_addr);
         int sent_bytes = send(sock, data_addr, data_len, 0);                             //Sending data
+        memset(&data_addr, 0, sizeof(data_addr));                                           //Purge send buffer
         if (sent_bytes < 0) {
             perror("Error sending data to server\n");
             return 1;

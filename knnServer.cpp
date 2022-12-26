@@ -143,8 +143,6 @@ int main(int argc, char *argv[]) {
             if (sent_bytes < 0) {
                 perror("error sending to client\n");
             }
-            memset(&result, 0, sizeof(result));                                           //Purge result string
-            //char buffer[2048];
             memset(&outBuffer, 0, sizeof(outBuffer));                                        //Purge out buffer
             expected_data_len = sizeof(buffer);                                                       //Prep for receive
         }

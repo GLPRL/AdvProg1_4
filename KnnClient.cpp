@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <vector>
-
 using namespace std;
 /**
  * reads input from the user in accordance to exrecise instructions.

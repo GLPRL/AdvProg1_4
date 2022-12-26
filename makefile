@@ -4,7 +4,7 @@ client.out:						#Client file
 	g++ -std=c++11 KnnClient.cpp -o client.out
 
 server.out: knnServer.o Algorithms.o MainDistance.o TypeVector.o		#Server files
-	g++ -std=c++11 knnServer.o Algorithms.o MainDistance.o TypeVector.o -o server.out
+	g++ knnServer.o Algorithms.o MainDistance.o TypeVector.o -o server.out
 
 knnServer.o: knnServer.cpp knnServer.h
 	g++ -c knnServer.cpp

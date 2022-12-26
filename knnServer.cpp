@@ -97,9 +97,9 @@ int main(int argc, char *argv[]) {
         if (client_sock < 0) {
             perror("Error accepting client");
         }
-        char buffer[2048];                                   //
-        memset(&buffer, 0, sizeof(buffer));         //
-        int expected_data_len = sizeof(buffer);              //
+        char buffer[2048];
+        memset(&buffer, 0, sizeof(buffer));
+        int expected_data_len = sizeof(buffer);
         while (true){
             int read_bytes = recv(client_sock, buffer, expected_data_len, 0);            //Receive data
             if (read_bytes < 0) {
@@ -123,14 +123,6 @@ int main(int argc, char *argv[]) {
             for (int i = 0; i < resSize; i++)
                 outBuffer[i] = result[i];
             expected_data_len = sizeof(buffer);
-            cout << "----------" << endl;
-            for (int i=0; i<numVector.size(); i++)
-                cout << numVector[i] << endl;
-            cout << "----------" << endl;
-            cout << k << endl;
-            cout << "----------" << endl;
-            cout << distanceType << endl;
-            cout << "----------" << endl;
             int sent_bytes = send(client_sock, outBuffer, read_bytes, 0);     //Send data back to client
             if (sent_bytes < 0) {
                 perror("error sending to client\n");

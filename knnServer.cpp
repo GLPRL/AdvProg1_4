@@ -1,5 +1,9 @@
 #include "knnServer.h"
 #include "MainDistance.h"
+/**
+ * Extracts relevant information from message received from the client.(from char[] c).
+ * Seprates the info to number vector, distanceType and k.
+ */
 void extract(char c[],int &k,string &distanceType,vector<double> &v) {
     int temp;
     string s (c);

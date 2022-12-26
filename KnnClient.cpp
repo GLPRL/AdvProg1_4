@@ -20,7 +20,8 @@ int readVector(string &distanceType, int &k,vector<double> &v,char c[] ) {
     for(int i=0;i<lin.length();i++){
         c[i]=lin[i];
     }
-    c[lin.length()+1] = '\0';
+    //c[lin.length()+1] = '\0';
+    c[lin.length()] = '\0';
     if(lin.compare("-1")==0){
         return 0;
     }
@@ -162,6 +163,7 @@ int main(int argc, char* argv[]) {
         } else if(read_bytes!=0) {
             cout << buffer << endl;                                                                       //Print result
         }
+
         if(result==0){                                                                               // if -1 then close
             close(sock);
             exit(0);

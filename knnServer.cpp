@@ -92,8 +92,8 @@ int main(int argc, char *argv[]) {
     vector<TypeVector> v = readData(vSize, fileName);
     map<string, int> names = getAllNames(v);
     while (true) {                                                                       //Listen loop: for client input
-        char outBuffer[2048];
-        memset(&outBuffer, 0, sizeof(outBuffer));
+       // char outBuffer[2048];
+       // memset(&outBuffer, 0, sizeof(outBuffer));
         if (listen(sock, 5) < 0) {
             perror("Error listening to a socket");
         }
@@ -107,6 +107,8 @@ int main(int argc, char *argv[]) {
         memset(&buffer, 0, sizeof(buffer));
         int expected_data_len = sizeof(buffer);
         while (true){
+            char outBuffer[2048];
+            memset(&outBuffer, 0, sizeof(outBuffer));
             int read_bytes = recv(client_sock, buffer, expected_data_len, 0);            //Receive data
             if (read_bytes < 0) {
                 perror("Error reading from client\n");
@@ -132,9 +134,10 @@ int main(int argc, char *argv[]) {
             string result = runMain (distanceType, v, numVector, k, names, vSize);
             int resSize = result.length();                              //Read continuous data from client and send back
             read_bytes = resSize;
-            memset(&outBuffer, 0, sizeof(outBuffer));                                        //Purge out buffer
+           memset(&outBuffer, 0, sizeof(outBuffer));                                        //Purge out buffer
             for (int i = 0; i < resSize; i++)
                 outBuffer[i] = result[i];
+            outBuffer[resSize]='\0';
             expected_data_len = sizeof(buffer);
             int sent_bytes = send(client_sock, outBuffer, read_bytes, 0);     //Send data back to client
             if (sent_bytes < 0) {

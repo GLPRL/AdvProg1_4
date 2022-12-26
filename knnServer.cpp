@@ -88,6 +88,8 @@ int main(int argc, char *argv[]) {
     vector<TypeVector> v = readData(vSize, fileName);
     map<string, int> names = getAllNames(v);
     while (true) {                                                                       //Listen loop: for client input
+        char outBuffer[2048];
+        memset(&outBuffer, 0, sizeof(outBuffer));
         if (listen(sock, 5) < 0) {
             perror("Error listening to a socket");
         }
@@ -111,15 +113,22 @@ int main(int argc, char *argv[]) {
             int k;
             if (buffer[0] == '-' && buffer[1] == '1' && buffer[3] == '\0') {                    //If received end signal
                 close(client_sock);
+                memset(&outBuffer, 0, sizeof(outBuffer));
                 break;
             }
             extract(buffer,k,distanceType,numVector);                         //Extract the data from buffer
             memset(&buffer, 0, sizeof(buffer));
+            cout<<"------"<<endl;
+            for(int i=0;i<numVector.size();i++){
+                cout<<numVector[i]<<endl;
+            }
+            cout<<distanceType<<endl;
             cout << k << endl;
+            cout<<"------"<<endl;
             string result = runMain (distanceType, v, numVector, k, names, vSize);
             int resSize = result.length();                              //Read continuous data from client and send back
             read_bytes = resSize;
-            char outBuffer[2048];
+            memset(&outBuffer, 0, sizeof(outBuffer));                                        //Purge out buffer
             for (int i = 0; i < resSize; i++)
                 outBuffer[i] = result[i];
             expected_data_len = sizeof(buffer);
@@ -128,7 +137,7 @@ int main(int argc, char *argv[]) {
                 perror("error sending to client\n");
             }
             memset(&result, 0, sizeof(result));                                           //Purge result string
-            char buffer[2048];
+            //char buffer[2048];
             memset(&outBuffer, 0, sizeof(outBuffer));                                        //Purge out buffer
             expected_data_len = sizeof(buffer);                                                       //Prep for receive
         }

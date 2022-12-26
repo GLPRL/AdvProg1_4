@@ -133,6 +133,7 @@ int main(int argc, char* argv[]) {
     }
     while (true) {                                                                                      //Send data loop
         char data_addr[2048];
+        memset(&data_addr, 0, sizeof(data_addr));                                           //Purge send buffer
         string s;
         int p;
         vector<double> v;
@@ -141,9 +142,12 @@ int main(int argc, char* argv[]) {
             cout << "invalid input" << endl;
            continue;
         }
+        if(result==0){                                                                               // if -1 then close
+            close(sock);
+            exit(0);
+        }
         int data_len = strlen(data_addr);
         int sent_bytes = send(sock, data_addr, data_len, 0);                             //Sending data
-        memset(&data_addr, 0, sizeof(data_addr));                                           //Purge send buffer
         if (sent_bytes < 0) {
             perror("Error sending data to server\n");
             return 1;
@@ -153,14 +157,10 @@ int main(int argc, char* argv[]) {
         int read_bytes = recv(sock, buffer, expected_data_len, 0);                 //Receive from server
         if (read_bytes < 0) {                                                                                 //If error
             perror("Error reading data from server");
-        } else {
+        } else if(read_bytes!=0) {
             cout << buffer << endl;                                                                       //Print result
         }
         memset(&buffer, 0, sizeof(buffer));                                       //Purge past data from buffer
-        if(result==0){                                                                               // if -1 then close
-            close(sock);
-            exit(0);
-        }
         continue;
     }
 }

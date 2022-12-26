@@ -27,45 +27,56 @@ int readVector(string &distanceType, int &k,vector<double> &v,char c[] ) {
         return -1;
     }
     //vector<double> v;
-    int pos = 0,readK=0,y;
+    int pos = 0,y;
     double x;
     char *e;
     int wasDistance = 0;
+    int wasVector = 0;
+    int wasK = 0;
+
+    lin.erase(0,1);
+
     // Loop until the end of the string each time separating the spaces.
     while ((pos = lin.find(" ")) != string::npos) {
         string sub = lin.substr(0, pos);
-        if(readK){
-            return -1;
-        }
         if ((sub.compare("AUC") == 0)
             || (sub.compare("MAN") == 0)
             || (sub.compare("CHB") == 0)
             || (sub.compare("CAN") == 0)
             || (sub.compare("MIN") == 0)
                 ) {
-            wasDistance = 1;
-            distanceType = sub;
+            if ( (wasVector == 1) && (wasK == 0) ) {
+                wasDistance = 1;
+                distanceType = sub;
+            } else {
+                return -1;
+            }
 
-        } else if(wasDistance) {
+        } else if (wasDistance==1)  {
+            if (wasK == 1) {
+                return -1;
+            }
             y = stoi(sub);
             x = std::strtod(sub.c_str(), &e);
             k=y;
             if(k!=x){
                 return -1;
             }
-            readK=1;
+            wasK = 1;
 
         } else {
             x = std::strtod(sub.c_str(), &e);
             if (*e != '\0') {
                 return -1;
             }
+            wasVector = 1;
             v.push_back(x);
         }
         lin.erase(0, pos + 1);
     }
-    v.erase(v.begin());
-    if(wasDistance && readK) {
+    //v.erase(v.begin());
+    //if(wasDistance && readK) {
+    if(wasDistance && wasK) {
         return 1;
     }
     return-1;

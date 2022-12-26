@@ -35,7 +35,7 @@ TypeVector aggregate(vector <string> vectorsString) {
                 perror("This excel file's vectors are not in accordance to instructions\n");
                 exit(-1);
         }
-    }                                                         //Item in last position in vectorsString will be the name
+    }                                                          //Item in last position in vectorsString will be the name
     string name = vectorsString[vectorsString.size() - 1];
     TypeVector tv = TypeVector(vectors, name);                             //Create the new TypeVector and calc.
     return tv;
@@ -51,23 +51,23 @@ vector <TypeVector> readData(int &vsize, string filename) {
     string line, word;
                                                                   //we need to select the algorithm according to string.
     vector <TypeVector> typeVectors;
-    vector <string> row;                                                //Name of type
-    vector<double> vectors;                                            //Vector of type
+    vector <string> row;                                                                                  //Name of type
+    vector<double> vectors;                                                                             //Vector of type
     int excelVectorSize;
     int firstLine = 1;
     fin.open(filename, ios::in);
     if (fin.is_open()) {
-        while (getline(fin, line)) {                             //Read from file and process.
-            row.clear();                                                //Cleaning the row data before data is inserted
+        while (getline(fin, line)) {                                                 //Read from file and process.
+            row.clear();                                                 //Cleaning the row data before data is inserted
             stringstream str(line);
-            while (getline(str, word, ',')) {              //Read single line from CSV file into string arr
+            while (getline(str, word, ',')) {               //Read single line from CSV file into string arr
                 row.push_back(word);
             }
-            if (firstLine) {                                            //if reading the first line of the file
+            if (firstLine) {                                                     //if reading the first line of the file
                 excelVectorSize = row.size() - 1;
                 firstLine = 0;
             }
-            TypeVector tVector = aggregate(row);        // Inserts the new TypeVector into an array.
+            TypeVector tVector = aggregate(row);                 // Inserts the new TypeVector into an array.
             typeVectors.push_back(tVector);
         }
     } else {

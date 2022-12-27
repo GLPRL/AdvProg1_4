@@ -15,6 +15,7 @@ attributes:
 2) Cup leaves length
 3) Petals width
 4) Petals length
+
 We will find the closest neighbors and classify the input vectors as the type of the flower.
 
 Comparisons can be made between each family: Irises, Wines, Beans, etc etc. each archtype has their own attributes to compare.

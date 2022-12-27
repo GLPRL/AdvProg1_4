@@ -42,7 +42,7 @@ int getPort(string port) {
     int size = port.size();
     for (int i = 0; i < size; i++) {                                  //Iterate through the port characters and validate
         if (isdigit(port[i]) == false) {
-            perror("Port must be an integer\n");
+            perror("Invalid port entered");
             return -1;
         }
     }
@@ -66,8 +66,8 @@ int getPort(string port) {
  * @return nothing
  */
 int main(int argc, char *argv[]) {
-    if (argc < 3) {                                                                               //Arg count validation
-        perror("Not enough arguments\n");
+    if (argc != 3) {                                                                               //Arg count validation
+        perror("Wrong amount of command line arguments");
         return 1;
     }
     const int server_port = getPort(argv[2]);                                                     //Port validation

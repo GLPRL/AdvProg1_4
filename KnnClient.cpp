@@ -96,7 +96,6 @@ int getPort(string port) {
     int size = port.size();
     for (int i = 0; i < size; i++) {                  //Iterate through the port characters and validate they are digits
         if (isdigit(port[i]) == false) {
-            perror("Port must be an integer");
             return -1;
         }
     }
@@ -120,14 +119,19 @@ int getPort(string port) {
  */
 int main(int argc, char* argv[]) {
     if (argc != 3) {
-        perror("Wrong amount of command line arguments\n");
+        perror("Wrong amount of command line arguments");
         return 1;
     }
     const char *ip_address = argv[1];                                                               //Options for socket
     const int port_no = getPort(argv[2]);
+    if (port_no == -1) {                                                                                    //Error port
+        perror("Invalid port entered");
+        return 1;
+    }
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
-        perror("error creating socket\n");
+        perror("error creating socket");
+        return 1;
     }
     struct sockaddr_in sin;                                                                               //setup socket
     memset(&sin, 0, sizeof(sin));

@@ -71,7 +71,7 @@ vector <TypeVector> readData(int &vsize, string filename) {
             typeVectors.push_back(tVector);
         }
     } else {
-        perror("No such file or directory\n");
+        perror("No such file or directory");
         exit(-1);
     }
     fin.close();
@@ -90,10 +90,12 @@ vector <TypeVector> readData(int &vsize, string filename) {
  * @return code 0 if works as expected.
 **/
 string runMain(string alg, vector<TypeVector> tv, vector<double> v, int k, map<string, int> names, int vSize) {
-    int vectorSize = v.size();
     int size = tv.size();
     if (vSize != v.size()) {
         return "invalid input";
+    }
+    if (k > tv.size()) {                                             //If K is bigger than the amount of vectors in file
+        k = tv.size();
     }
     for (int i = 0; i < size; i++) {
         tv[i].calculateDistance(v, alg);                               //Calc. distance according to user

@@ -90,7 +90,6 @@ vector <TypeVector> readData(int &vsize, string filename) {
  * @return code 0 if works as expected.
 **/
 string runMain(string alg, vector<TypeVector> tv, vector<double> v, int k, map<string, int> names, int vSize) {
-    int vectorSize = v.size();
     int size = tv.size();
     if (vSize != v.size()) {
         return "invalid input";

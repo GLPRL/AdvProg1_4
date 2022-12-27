@@ -71,7 +71,7 @@ vector <TypeVector> readData(int &vsize, string filename) {
             typeVectors.push_back(tVector);
         }
     } else {
-        perror("No such file or directory\n");
+        perror("No such file or directory");
         exit(-1);
     }
     fin.close();

@@ -72,12 +72,12 @@ int main(int argc, char *argv[]) {
     }
     const int server_port = getPort(argv[2]);                                                     //Port validation
     if (server_port == -1) {
-        perror("No valid port entered. Exiting\n");
+        perror("No valid port entered. Exiting");
         return 1;
     }
     int sock = socket(AF_INET, SOCK_STREAM, 0);                                   //Declaring socket
     if (sock < 0) {
-        perror("Error creating socket\n");
+        perror("Error creating socket");
     }
     struct sockaddr_in sin;
     memset(&sin, 0, sizeof(sin));
@@ -92,8 +92,6 @@ int main(int argc, char *argv[]) {
     vector<TypeVector> v = readData(vSize, fileName);
     map<string, int> names = getAllNames(v);
     while (true) {                                                                       //Listen loop: for client input
-       // char outBuffer[2048];
-       // memset(&outBuffer, 0, sizeof(outBuffer));
         if (listen(sock, 5) < 0) {
             perror("Error listening to a socket");
         }
@@ -111,7 +109,7 @@ int main(int argc, char *argv[]) {
             memset(&outBuffer, 0, sizeof(outBuffer));
             int read_bytes = recv(client_sock, buffer, expected_data_len, 0);            //Receive data
             if (read_bytes < 0) {
-                perror("Error reading from client\n");
+                perror("Error reading from client");
                 continue;
             }
             vector<double> numVector;
@@ -141,7 +139,7 @@ int main(int argc, char *argv[]) {
             expected_data_len = sizeof(buffer);
             int sent_bytes = send(client_sock, outBuffer, read_bytes, 0);     //Send data back to client
             if (sent_bytes < 0) {
-                perror("error sending to client\n");
+                perror("error sending to client");
             }
             memset(&outBuffer, 0, sizeof(outBuffer));                                        //Purge out buffer
             expected_data_len = sizeof(buffer);                                                       //Prep for receive

@@ -96,7 +96,6 @@ int getPort(string port) {
     int size = port.size();
     for (int i = 0; i < size; i++) {                  //Iterate through the port characters and validate they are digits
         if (isdigit(port[i]) == false) {
-            perror("Port must be an integer");
             return -1;
         }
     }

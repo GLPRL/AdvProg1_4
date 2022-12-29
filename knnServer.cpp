@@ -67,12 +67,12 @@ int getPort(string port) {
  */
 int main(int argc, char *argv[]) {
     if (argc != 3) {                                                                               //Arg count validation
-        perror("Wrong amount of command line arguments");
+        perror("invalid input");
         return 1;
     }
     const int server_port = getPort(argv[2]);                                                     //Port validation
     if (server_port == -1) {
-        perror("No valid port entered. Exiting");
+        perror("invalid input");
         return 1;
     }
     int sock = socket(AF_INET, SOCK_STREAM, 0);                                   //Declaring socket

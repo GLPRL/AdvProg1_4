@@ -95,7 +95,7 @@ string runMain(string alg, vector<TypeVector> tv, vector<double> v, int k, map<s
         return "invalid input";
     }
     if (k > tv.size()) {                                             //If K is bigger than the amount of vectors in file
-        k = tv.size();
+        return "invalid input";
     }
     for (int i = 0; i < size; i++) {
         tv[i].calculateDistance(v, alg);                               //Calc. distance according to user

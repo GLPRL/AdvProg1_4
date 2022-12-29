@@ -10,7 +10,7 @@ using namespace std;
 /**
  * reads input from the user in accordance to exrecise instructions.
  * returns 1 if success
- * retunrs 0 if input was -1
+ * returns 0 if input was -1
  * returns -1 if input was not good
  */
 int readVector(string &distanceType, int &k,vector<double> &v,char c[] ) {
@@ -119,13 +119,13 @@ int getPort(string port) {
  */
 int main(int argc, char* argv[]) {
     if (argc != 3) {
-        perror("Wrong amount of command line arguments");
+        perror("invalid input");
         return 1;
     }
     const char *ip_address = argv[1];                                                               //Options for socket
     const int port_no = getPort(argv[2]);
     if (port_no == -1) {                                                                                    //Error port
-        perror("Invalid port entered");
+        perror("invalid input");
         return 1;
     }
     int sock = socket(AF_INET, SOCK_STREAM, 0);

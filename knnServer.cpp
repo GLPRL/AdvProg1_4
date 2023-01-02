@@ -101,11 +101,11 @@ int main(int argc, char *argv[]) {
         if (client_sock < 0) {
             perror("Error accepting client");
         }
-        char buffer[2048];
+        char buffer[4096];
         memset(&buffer, 0, sizeof(buffer));
         int expected_data_len = sizeof(buffer);
         while (true){
-            char outBuffer[2048];
+            char outBuffer[4096];
             memset(&outBuffer, 0, sizeof(outBuffer));
             int read_bytes = recv(client_sock, buffer, expected_data_len, 0);            //Receive data
             if (read_bytes < 0) {

@@ -142,7 +142,7 @@ int main(int argc, char* argv[]) {
         perror("Error connecting to server");
     }
     while (true) {                                                                                      //Send data loop
-        char data_addr[2048];
+        char data_addr[4096];
         memset(&data_addr, 0, sizeof(data_addr));                                           //Purge send buffer
         string s;
         int p;
@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
             perror("Error sending data to server\n");
             return 1;
         }
-        char buffer[2048];                                                       //Clearing space for answer from server
+        char buffer[4096];                                                       //Clearing space for answer from server
         int expected_data_len = sizeof(buffer);
         int read_bytes = recv(sock, buffer, expected_data_len, 0);                 //Receive from server
         if (read_bytes < 0) {                                                                                 //If error

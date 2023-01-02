@@ -101,11 +101,11 @@ int main(int argc, char *argv[]) {
         if (client_sock < 0) {
             perror("Error accepting client");
         }
-        char buffer[2048];
+        char buffer[4096];
         memset(&buffer, 0, sizeof(buffer));
         int expected_data_len = sizeof(buffer);
         while (true){
-            char outBuffer[2048];
+            char outBuffer[4096];
             memset(&outBuffer, 0, sizeof(outBuffer));
             int read_bytes = recv(client_sock, buffer, expected_data_len, 0);            //Receive data
             if (read_bytes < 0) {
@@ -122,13 +122,6 @@ int main(int argc, char *argv[]) {
             }
             extract(buffer,k,distanceType,numVector);                         //Extract the data from buffer
             memset(&buffer, 0, sizeof(buffer));
-            cout<<"------"<<endl;
-            for(int i=0;i<numVector.size();i++){
-                cout<<numVector[i]<<endl;
-            }
-            cout<<distanceType<<endl;
-            cout << k << endl;
-            cout<<"------"<<endl;
             string result = runMain (distanceType, v, numVector, k, names, vSize);
             int resSize = result.length();                              //Read continuous data from client and send back
             read_bytes = resSize;

@@ -122,13 +122,6 @@ int main(int argc, char *argv[]) {
             }
             extract(buffer,k,distanceType,numVector);                         //Extract the data from buffer
             memset(&buffer, 0, sizeof(buffer));
-            cout<<"------"<<endl;
-            for(int i=0;i<numVector.size();i++){
-                cout<<numVector[i]<<endl;
-            }
-            cout<<distanceType<<endl;
-            cout << k << endl;
-            cout<<"------"<<endl;
             string result = runMain (distanceType, v, numVector, k, names, vSize);
             int resSize = result.length();                              //Read continuous data from client and send back
             read_bytes = resSize;

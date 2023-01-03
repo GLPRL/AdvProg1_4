@@ -78,6 +78,7 @@ int main(int argc, char *argv[]) {
     int sock = socket(AF_INET, SOCK_STREAM, 0);                                   //Declaring socket
     if (sock < 0) {
         perror("Error creating socket");
+        return 1;
     }
     struct sockaddr_in sin;
     memset(&sin, 0, sizeof(sin));
@@ -86,6 +87,7 @@ int main(int argc, char *argv[]) {
     sin.sin_port = htons(server_port);
     if (bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {                              //Bind socket
         perror("Error binding socket");
+        return 1;
     }
     int vSize = -1;
     string fileName = argv[1];
@@ -94,6 +96,7 @@ int main(int argc, char *argv[]) {
     while (true) {                                                                       //Listen loop: for client input
         if (listen(sock, 5) < 0) {
             perror("Error listening to a socket");
+            return 1;
         }
         struct sockaddr_in client_sin;
         unsigned int addr_len = sizeof(client_sin);

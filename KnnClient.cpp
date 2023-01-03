@@ -140,6 +140,7 @@ int main(int argc, char* argv[]) {
     sin.sin_port = htons(port_no);
     if (connect(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {                   //Connected to server
         perror("Error connecting to server");
+        return 1;
     }
     while (true) {                                                                                      //Send data loop
         char data_addr[4096];
